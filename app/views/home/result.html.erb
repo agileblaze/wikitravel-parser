@@ -1,0 +1,65 @@
+<div class="container">
+	<div class="row">
+		<div class="span12">
+			<h3 class="text-center text-info">
+				Wiki Travel Parser
+			</h3>
+			<%= form_tag("/result", method: "post", :class => "form-search form-inline") do %>
+			 
+				<%= text_field_tag :location, params[:location] %>
+			    <%= submit_tag "Search",:class => "btn" %>
+			<% end %>
+
+			<%= "<h3 class='text-center'>No records found!</h3>".html_safe unless @lines.any? %>
+
+			<div class="tabbable tabs-left" id="tabs-24718">				
+				<ul class="nav nav-tabs">
+				<% @lines.each do |title| %>
+					<li class=<%= "active" if title["index"] == "1" %>>
+						<a href="#tab<%= title["index"] %>" data-toggle="tab" onclick="get_data('<%= params[:location] %>', '<%= title["index"] %>')"><%= title["line"]%></a>
+					</li>
+				<% end %>					
+				</ul>
+				<div class="tab-content">
+					<% @lines.each do |title| %>
+						<div class="tab-pane <%= "active" if title["index"] == "1" %>" id="tab<%= title["index"] %>" processed="false">
+							<div id="loader<%= title["index"] %>" style="display: none" class="center"> 
+							    <img src="/assets/load.gif">
+							</div>
+						</div>
+					<% end %>					
+				</div>
+			</div>					
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	function get_data(place, page)
+	{
+		$(window).scrollTop(0);
+		var page_section = $('#tab' + page);
+		if(page_section.attr('processed') == "false"){
+			$('#loader'+page).show();
+			$.ajax({
+		  		url:"/get_detail",
+		  		type: "POST",
+		  		data:  { 'location': place , 'page': page },
+		  		success: function(data) {	  			
+		  			page_section.html(data.content);
+		  			$('#loader'+page).hide();
+		  			page_section.attr('processed', 'true')
+	           	}
+		  	});
+		}			  	
+	}
+
+	$(document).ready(function(){
+		<% unless @lines.empty? %>
+			get_data('<%= params[:location] %>', '<%= @lines[0]["index"] %>');
+		<% end %>
+	});
+</script>
+
+
+
