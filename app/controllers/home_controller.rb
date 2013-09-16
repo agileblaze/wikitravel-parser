@@ -2,6 +2,7 @@ require 'net/http'
 
 class HomeController < ApplicationController
 
+  # Here we pull the content under a tab header
   def get_detail
     	location = params[:location]
       page = params[:page]
@@ -26,6 +27,7 @@ class HomeController < ApplicationController
       render :json => {:content => main_html}
   end
 
+  # Here we pull all tab headers of a page/location
   def result
       @lines = []
       unless params[:location].nil? || params[:location] == ""

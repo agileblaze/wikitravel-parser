@@ -1,3 +1,4 @@
+<!-- Tab headers and corresponding content displayed here -->
 <div class="container">
 	<div class="row">
 		<div class="span12">
@@ -35,6 +36,7 @@
 </div>
 
 <script type="text/javascript">
+	// Ajax call to pull content under a tab header
 	function get_data(place, page)
 	{
 		$(window).scrollTop(0);
@@ -54,6 +56,7 @@
 		}			  	
 	}
 
+	// Here we pull content of first tab header
 	$(document).ready(function(){
 		<% unless @lines.empty? %>
 			get_data('<%= params[:location] %>', '<%= @lines[0]["index"] %>');
